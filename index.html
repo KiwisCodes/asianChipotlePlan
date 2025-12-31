@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Măm Măm Bowl - Fast Casual Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap");
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #fafaf9; /* stone-50 */
+        color: #44403c;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        height: 300px;
+      }
+
+      .glass-card {
+        background: white;
+        border: 1px solid #e7e5e4;
+        box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+      }
+
+      .layout-grid div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .line-flow {
+        border: 2px dashed #fb923c;
+        position: relative;
+      }
+
+      .line-flow::after {
+        content: "→";
+        position: absolute;
+        right: -20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #fb923c;
+        font-size: 1.5rem;
+      }
+    </style>
+    <!-- Chosen Palette: Ginger Orange & Clean Slate (Modern, fast-paced, high-contrast) -->
+    <!-- Application Structure Plan: Tối ưu hóa cho mô hình Fast Casual một chiều. Cấu trúc gồm: 1. Tổng quan chiến lược "Không rửa chén", 2. Trình giả lập Menu & Nước (tính toán giá combo), 3. Sơ đồ luồng di chuyển (vào -> chọn -> ăn -> dọn -> ra), 4. Công thức sốt & Nguồn hàng, 5. Tài chính. -->
+    <!-- Visualization & Content Choices: 
+        - Menu Simulator (JS): Cập nhật giá nước combo 10k.
+        - Layout Matrix (CSS Grid): Vẽ lại luồng di chuyển 1 chiều với trạm rác ở cửa ra.
+        - Recipe Cards (HTML): Chi tiết cách chế biến 4 loại sốt cốt lõi.
+        - Supply Chain Table (HTML): Danh sách nguồn hàng nhập khẩu & địa phương.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  </head>
+  <body class="antialiased">
+    <nav
+      class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-stone-200"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center"
+      >
+        <span class="text-xl font-extrabold text-orange-600"
+          >MĂM MĂM BOWL
+          <span class="text-stone-400 font-light">| Fast Casual</span></span
+        >
+        <div class="hidden md:flex space-x-6 text-sm font-bold">
+          <a href="#menu" class="hover:text-orange-500">THỰC ĐƠN</a>
+          <a href="#layout" class="hover:text-orange-500">MẶT BẰNG</a>
+          <a href="#recipes" class="hover:text-orange-500">CÔNG THỨC</a>
+          <a href="#finance" class="hover:text-orange-500">TÀI CHÍNH</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-24 pb-12 max-w-7xl mx-auto px-4 space-y-24">
+      <!-- SECTION 1: CORE STRATEGY -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 class="text-5xl font-extrabold text-stone-900 leading-tight mb-6">
+            Mô Hình <span class="text-orange-500">0% Rửa Chén</span>, 100% Trải
+            Nghiệm.
+          </h1>
+          <p class="text-lg text-stone-600 mb-8">
+            Tối ưu chi phí nhân công và không gian bằng cách sử dụng toàn bộ bao
+            bì sinh học bã mía cao cấp. Khách hàng tham gia vào quy trình
+            "Self-service" văn minh: Tự chọn món - Tự dọn rác.
+          </p>
+          <div class="flex gap-4">
+            <div
+              class="bg-orange-100 text-orange-700 px-4 py-2 rounded-full font-bold text-sm"
+            >
+              #FastCasual
+            </div>
+            <div
+              class="bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-sm"
+            >
+              #ZeroWasteEffort
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-stone-100 p-8 rounded-3xl border border-stone-200 space-y-4"
+        >
+          <h3 class="font-bold text-xl mb-4">Tại sao không dùng đồ sứ?</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">✔</span>
+              <span class="text-sm"
+                ><strong>Tiết kiệm:</strong> Không cần nhân viên rửa bát, không
+                vỡ đồ.</span
+              >
+            </li>
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">✔</span>
+              <span class="text-sm"
+                ><strong>Vệ sinh:</strong> Mỗi khách một bộ mới, không lo hóa
+                chất tẩy rửa còn sót.</span
+              >
+            </li>
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">✔</span>
+              <span class="text-sm"
+                ><strong>Tốc độ:</strong> Khách xong là đứng dậy đi ngay, nhân
+                viên chỉ việc lau mặt bàn.</span
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SECTION 2: MENU & WATER COMBO -->
+      <section id="menu" class="space-y-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold italic">Trình Mô Phỏng Đơn Hàng</h2>
+          <p class="text-stone-500">
+            Chọn cơm và nước để xem ưu đãi mua kèm 10k.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Food Choice -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="glass-card p-6 rounded-2xl">
+              <h3 class="font-bold mb-4 flex items-center text-orange-600">
+                1. CHỌN MÓN CHÍNH
+              </h3>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="food-list">
+                <!-- JS Generated -->
+              </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl">
+              <h3 class="font-bold mb-4 flex items-center text-orange-600">
+                2. CHỌN NƯỚC (Mua kèm chỉ 10k)
+              </h3>
+              <div
+                class="grid grid-cols-1 md:grid-cols-3 gap-3"
+                id="drink-list"
+              >
+                <!-- JS Generated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Receipt -->
+          <div class="lg:col-span-1">
+            <div
+              class="bg-stone-900 text-white p-8 rounded-3xl sticky top-24 shadow-2xl"
+            >
+              <h3 class="text-xl font-bold mb-6 border-b border-stone-700 pb-4">
+                TÓM TẮT ĐƠN
+              </h3>
+              <div id="order-details" class="space-y-4 min-h-[100px]">
+                <p class="text-stone-500 text-center py-8">
+                  Chưa có món nào...
+                </p>
+              </div>
+              <div class="mt-8 pt-6 border-t border-stone-700 space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span class="text-stone-400">Tạm tính:</span>
+                  <span id="val-subtotal">0đ</span>
+                </div>
+                <div class="flex justify-between text-sm text-emerald-400">
+                  <span id="label-promo">Giảm giá nước:</span>
+                  <span id="val-promo">-0đ</span>
+                </div>
+                <div
+                  class="flex justify-between text-2xl font-black text-orange-500 pt-2"
+                >
+                  <span>TỔNG:</span>
+                  <span id="val-total">0đ</span>
+                </div>
+              </div>
+              <button
+                class="w-full mt-8 bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-xl transition"
+              >
+                XÁC NHẬN MÓN
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: NEW LAYOUT DESIGN -->
+      <section id="layout" class="space-y-8">
+        <div class="border-l-8 border-orange-500 pl-6">
+          <h2 class="text-3xl font-bold">Sơ Đồ Luồng Di Chuyển 1 Chiều</h2>
+          <p class="text-stone-600 mt-2">
+            Thiết kế L-Shape: Cửa vào -> Quầy Line (Bếp sau lưng) -> Khu vực ăn
+            -> Trạm rác nhỏ -> Cửa ra.
+          </p>
+        </div>
+
+        <div
+          class="bg-white p-4 sm:p-10 rounded-3xl border border-stone-200 shadow-inner"
+        >
+          <div
+            class="grid grid-cols-6 grid-rows-6 gap-2 h-[500px] w-full bg-stone-50 p-4 border-4 border-stone-200 rounded-xl relative overflow-hidden layout-grid"
+          >
+            <!-- Bếp (Phía sau quầy line) -->
+            <div class="col-span-6 row-span-1 bg-stone-800 text-white">
+              KHU VỰC BẾP NẤU & SƠ CHẾ (KÍN)
+            </div>
+
+            <!-- Quầy Line -->
+            <div
+              class="col-start-1 col-end-4 row-start-2 row-end-3 bg-orange-500 text-white border-2 border-orange-200"
+            >
+              1. CHỌN BASE → ĐẠM → RAU → SỐT
+            </div>
+            <div
+              class="col-start-4 col-end-5 row-start-2 row-end-3 bg-emerald-600 text-white"
+            >
+              2. THANH TOÁN
+            </div>
+
+            <!-- Lối đi chính -->
+            <div
+              class="col-start-1 col-end-2 row-start-3 row-end-6 bg-stone-100 border border-stone-200"
+            >
+              LỐI VÀO (VÀO THẲNG LINE)
+            </div>
+
+            <!-- Khu vực ăn -->
+            <div
+              class="col-start-3 col-end-6 row-start-3 row-end-6 bg-blue-50 border border-blue-100 flex-col"
+            >
+              <span class="text-blue-500">KHU VỰC NGỒI ĂN</span>
+              <div class="flex gap-2 mt-2">🪑 🪑 🪑 🪑</div>
+            </div>
+
+            <!-- Trạm rác & Cửa ra -->
+            <div
+              class="col-start-6 col-end-7 row-start-5 row-end-6 bg-red-100 text-red-600 border border-red-200 text-[10px]"
+            >
+              ♻️ TRẠM RÁC NHỎ
+            </div>
+            <div
+              class="col-start-6 col-end-7 row-start-6 row-end-7 bg-stone-300 text-stone-700"
+            >
+              CỬA RA (EXIT)
+            </div>
+
+            <!-- Trang trí / Kho -->
+            <div
+              class="col-start-2 col-end-3 row-start-6 row-end-7 bg-stone-100"
+            >
+              KHO KHÔ
+            </div>
+          </div>
+          <div class="mt-6 flex justify-center gap-8 text-sm font-bold">
+            <span class="flex items-center"
+              ><span class="w-3 h-3 bg-orange-500 mr-2 rounded"></span> Luồng
+              chọn món</span
+            >
+            <span class="flex items-center"
+              ><span
+                class="w-3 h-3 bg-blue-50 mr-2 rounded border border-blue-200"
+              ></span>
+              Luồng ăn uống</span
+            >
+            <span class="flex items-center"
+              ><span
+                class="w-3 h-3 bg-red-100 mr-2 rounded border border-red-200"
+              ></span>
+              Luồng dọn dẹp</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: RECIPES & SOURCING -->
+      <section id="recipes" class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Sốt -->
+        <div class="space-y-6">
+          <h3 class="text-2xl font-bold flex items-center">
+            <span class="mr-2">🍯</span> Bí Kíp Sốt Độc Quyền
+          </h3>
+          <div class="space-y-4">
+            <div class="glass-card p-5 rounded-xl border-l-4 border-red-500">
+              <h4 class="font-bold">Sốt Trộn Hàn Quốc (Gochujang Honey)</h4>
+              <p class="text-xs text-stone-500 mt-1">
+                Quy trình: Gochujang + Mật ong + Dầu mè + Tỏi băm. Đun nhẹ đến
+                khi sệt. Vị cay ngọt đậm đà, hợp với Bò & Heo.
+              </p>
+            </div>
+            <div class="glass-card p-5 rounded-xl border-l-4 border-yellow-500">
+              <h4 class="font-bold">Sốt Trứng Muối Tan Chảy (Salted Egg)</h4>
+              <p class="text-xs text-stone-500 mt-1">
+                Quy trình: Lòng đỏ trứng muối hấp chín, tán nhuyễn. Xào cùng bơ
+                nhạt và chút sữa đặc. Vị béo ngậy, hợp với Tôm & Gà.
+              </p>
+            </div>
+            <div class="glass-card p-5 rounded-xl border-l-4 border-stone-800">
+              <h4 class="font-bold">Sốt Tiêu Đen (Black Pepper)</h4>
+              <p class="text-xs text-stone-500 mt-1">
+                Quy trình: Tiêu đen rang thơm, xay vỡ. Nấu cùng nước dùng xương
+                và hắc xì dầu. Vị nồng ấm, hợp với Bò.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sourcing -->
+        <div class="space-y-6">
+          <h3 class="text-2xl font-bold flex items-center">
+            <span class="mr-2">📦</span> Nguồn Gốc Nguyên Liệu
+          </h3>
+          <div class="overflow-hidden border border-stone-200 rounded-xl">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-stone-100 text-stone-600 font-bold">
+                <tr>
+                  <th class="p-4">Nguyên liệu</th>
+                  <th class="p-4">Nhà cung cấp</th>
+                  <th class="p-4">Tiêu chuẩn</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-stone-200">
+                <tr>
+                  <td class="p-4 font-bold">Gạo ST25</td>
+                  <td class="p-4">Đại lý cấp 1 Miền Tây</td>
+                  <td class="p-4">Hạt dài, dẻo thơm</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-bold">Bò Mỹ/Úc</td>
+                  <td class="p-4">New Fresh Foods / Meat World</td>
+                  <td class="p-4">Đầy đủ CO/CQ</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-bold">Gia vị Hàn/Nhật</td>
+                  <td class="p-4">K-Market / Akuruhi</td>
+                  <td class="p-4">Nhập khẩu chính ngạch</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-bold">Rau VietGAP</td>
+                  <td class="p-4">Hợp tác xã rau sạch địa phương</td>
+                  <td class="p-4">Giao mới mỗi sáng</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FINANCIAL DASHBOARD -->
+      <section id="finance" class="space-y-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold">Hiệu Quả Kinh Doanh Dự Kiến</h2>
+          <p class="text-stone-500 italic">
+            (Dựa trên công suất 100 bát/ngày - Không tốn phí rửa bát)
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="glass-card p-8 rounded-3xl">
+            <h4 class="font-bold mb-6 text-center">Phân Bổ Chi Phí (OPEX)</h4>
+            <div class="chart-container">
+              <canvas id="opexChart"></canvas>
+            </div>
+          </div>
+          <div class="glass-card p-8 rounded-3xl flex flex-col justify-center">
+            <div class="space-y-6">
+              <div class="flex justify-between items-end border-b pb-2">
+                <span class="text-stone-500">Giá bán TB (Bowl + Nước)</span>
+                <span class="text-2xl font-bold">75.000đ</span>
+              </div>
+              <div class="flex justify-between items-end border-b pb-2">
+                <span class="text-stone-500">Giá vốn (Food + Bao bì)</span>
+                <span class="text-2xl font-bold text-red-500">32.000đ</span>
+              </div>
+              <div class="flex justify-between items-end border-b pb-2">
+                <span class="text-stone-500">Biên lợi nhuận gộp</span>
+                <span class="text-2xl font-bold text-emerald-500">57%</span>
+              </div>
+              <div class="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                <p class="text-xs text-orange-800">
+                  **Lưu ý: Nhờ không có muỗng sứ/bát sứ, chúng ta tiết kiệm được
+                  ít nhất 1 nhân sự tạp vụ (khoảng 6-8 triệu/tháng) và giảm
+                  lượng nước tiêu thụ đáng kể.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      class="bg-stone-900 text-stone-500 py-12 px-4 border-t border-stone-800"
+    >
+      <div class="max-w-7xl mx-auto text-center space-y-4">
+        <p class="font-bold text-white">
+          MĂM MĂM BOWL - THE FAST CASUAL REVOLUTION
+        </p>
+        <p class="text-sm">Mô hình kinh doanh tối ưu cho đô thị hiện đại.</p>
+      </div>
+    </footer>
+
+    <script>
+      const foodMenu = [
+        { id: "f1", name: "Bowl Gà Teriyaki", price: 55000, icon: "🍗" },
+        { id: "f2", name: "Bowl Heo Xá Xíu", price: 55000, icon: "🍖" },
+        { id: "f3", name: "Bowl Bò Bulgogi", price: 75000, icon: "🥩" },
+        { id: "f4", name: "Bowl Tôm Trứng Muối", price: 75000, icon: "🍤" },
+      ];
+
+      const drinkMenu = [
+        { id: "d1", name: "Trà Dưỡng Nhan", price: 15000, icon: "🫖" },
+        { id: "d2", name: "Nước Sâm Lạnh", price: 15000, icon: "🥤" },
+        { id: "d3", name: "Coca-Cola", price: 15000, icon: "🥤" },
+      ];
+
+      const state = {
+        selectedFood: null,
+        selectedDrink: null,
+      };
+
+      function initApp() {
+        renderFood();
+        renderDrinks();
+        initCharts();
+      }
+
+      function renderFood() {
+        const container = document.getElementById("food-list");
+        foodMenu.forEach((item) => {
+          const btn = document.createElement("button");
+          btn.className =
+            "p-4 border-2 border-stone-100 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition text-left focus:outline-none bg-white";
+          btn.innerHTML = `
+                    <div class="text-2xl mb-1">${item.icon}</div>
+                    <div class="font-bold text-sm">${item.name}</div>
+                    <div class="text-xs text-stone-400">${item.price.toLocaleString()}đ</div>
+                `;
+          btn.onclick = () => {
+            state.selectedFood = item;
+            updateUI("food", btn, container);
+          };
+          container.appendChild(btn);
+        });
+      }
+
+      function renderDrinks() {
+        const container = document.getElementById("drink-list");
+        drinkMenu.forEach((item) => {
+          const btn = document.createElement("button");
+          btn.className =
+            "p-4 border-2 border-stone-100 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition text-left focus:outline-none bg-white flex justify-between items-center";
+          btn.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-xl mr-2">${item.icon}</span>
+                        <div>
+                            <div class="font-bold text-sm">${item.name}</div>
+                            <div class="text-[10px] text-stone-400">Lẻ: ${item.price.toLocaleString()}đ</div>
+                        </div>
+                    </div>
+                `;
+          btn.onclick = () => {
+            state.selectedDrink = item;
+            updateUI("drink", btn, container);
+          };
+          container.appendChild(btn);
+        });
+      }
+
+      function updateUI(type, btn, container) {
+        Array.from(container.children).forEach((b) =>
+          b.classList.remove(
+            "border-orange-500",
+            "bg-orange-50",
+            "ring-2",
+            "ring-orange-200"
+          )
+        );
+        btn.classList.add(
+          "border-orange-500",
+          "bg-orange-50",
+          "ring-2",
+          "ring-orange-200"
+        );
+        calculateTotal();
+      }
+
+      function calculateTotal() {
+        const details = document.getElementById("order-details");
+        const subtotalEl = document.getElementById("val-subtotal");
+        const promoEl = document.getElementById("val-promo");
+        const totalEl = document.getElementById("val-total");
+
+        let subtotal = 0;
+        let promo = 0;
+        let html = "";
+
+        if (state.selectedFood) {
+          subtotal += state.selectedFood.price;
+          html += `<div class="flex justify-between"><span>${
+            state.selectedFood.name
+          }</span><span>${state.selectedFood.price.toLocaleString()}đ</span></div>`;
+        }
+
+        if (state.selectedDrink) {
+          subtotal += state.selectedDrink.price;
+          html += `<div class="flex justify-between"><span>${
+            state.selectedDrink.name
+          } (Lẻ)</span><span>${state.selectedDrink.price.toLocaleString()}đ</span></div>`;
+
+          if (state.selectedFood) {
+            promo = 5000; // Giảm 15k -> 10k
+            html += `<div class="text-xs text-emerald-400">Ưu đãi mua kèm: -5.000đ</div>`;
+          }
+        }
+
+        if (!state.selectedFood && !state.selectedDrink) {
+          details.innerHTML = `<p class="text-stone-500 text-center py-8">Chưa có món nào...</p>`;
+        } else {
+          details.innerHTML = html;
+        }
+
+        subtotalEl.textContent = subtotal.toLocaleString() + "đ";
+        promoEl.textContent = "-" + promo.toLocaleString() + "đ";
+        totalEl.textContent = (subtotal - promo).toLocaleString() + "đ";
+      }
+
+      function initCharts() {
+        const ctx = document.getElementById("opexChart").getContext("2d");
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: [
+              "Mặt bằng",
+              "Nhân sự (Tối giản)",
+              "Marketing",
+              "Điện nước/Internet",
+              "Bao bì sinh học",
+            ],
+            datasets: [
+              {
+                data: [20, 25, 10, 8, 12],
+                backgroundColor: [
+                  "#f97316",
+                  "#fb923c",
+                  "#fdba74",
+                  "#44403c",
+                  "#10b981",
+                ],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { boxWidth: 10, font: { size: 10 } },
+              },
+            },
+          },
+        });
+      }
+
+      window.onload = initApp;
+    </script>
+  </body>
+</html>
